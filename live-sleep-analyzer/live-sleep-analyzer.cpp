@@ -15,9 +15,14 @@
 #include "sleepEntry.h"
 #include "sleepControl.h"
 
+// set to 1 to use counter IDs instead of inFile IDs
 #define OVERRIDE_SLP_ID 1
-#define INPUT_FILE "C:\\Users\\Dan\\git\\arduino-simulator\\sleep.txt"
-#define OUTPUT_FILE "C:\\Users\\Dan\\desktop\\\derivSleep.txt"
+
+// PROCSESED is used to output the above file. This fixes the negative signed integer ID issue
+#define INPUT_FILE "..\\samples\\newsleepdata.txt"
+#define PROCESSED_OUTPUT_FILE "..\\outdata\\processedSleepData.txt"
+#define DERIV_OUTPUT_FILE "..\\outdata\\derivSleep.txt"
+
 using namespace std;
 
 int main (int argc, char* argv[])
@@ -45,12 +50,12 @@ int main (int argc, char* argv[])
 	SleepControl * sCTRL = new SleepControl();
 
 	// Open output / inputs
-	ifstream inputFile(INPUT_FILE);
-	ofstream ouutputFile("newsleepdata.txt");
-	ofstream oDerivFile(OUTPUT_FILE);
+	ifstream inFile(INPUT_FILE);
+	ofstream outFile(PROCESSED_OUTPUT_FILE);
+	ofstream oDerivFile(DERIV_OUTPUT_FILE);
 
 	// Check input / output errors
-	if (!inputFile.is_open()) {
+	if (!inFile.is_open()) {
 		cout << "Error, couldn't open input file!";
 		return 0;
 	}
@@ -58,7 +63,7 @@ int main (int argc, char* argv[])
 	// Read in each line into 'line'
 	string line;
 	float i = 0;
-	while (getline(inputFile, line))
+	while (getline(inFile, line))
 	{
 		int iId, iX, iY, iZ;
 		const char * cpLine = line.c_str();
@@ -74,7 +79,7 @@ int main (int argc, char* argv[])
 			// Create then add new sleep entry
 			SleepEntry * sE = new SleepEntry(iId, iX, iY, iZ);
 			sCTRL->addSleepEntry(*sE);
-			ouutputFile << iId << "," << iX << "," << iY << "," << iZ << "\n";
+			outFile << iId << "," << iX << "," << iY << "," << iZ << "\n";
 			oDerivFile << iId << "," << sCTRL->GetXSlopeBetween(iId, iId-1) << "," << sCTRL->GetYSlopeBetween(iId, iId-1) << "," << sCTRL->GetZSlopeBetween(iId, iId-1) << "\n";
 			//  free(&sE);
 			i++;
@@ -85,7 +90,7 @@ int main (int argc, char* argv[])
 		}
 	}
 
-	ouutputFile.close();
+	outFile.close();
 	oDerivFile.close();
 	cout << "Closed, done.";
 
