@@ -6,6 +6,7 @@
  */
 #include <iostream>
 #include <sleepEntry.h>
+
 SleepEntry::SleepEntry(int id, int xVal, int yVal, int zVal)
 {
 	this->id   = id;
@@ -13,6 +14,7 @@ SleepEntry::SleepEntry(int id, int xVal, int yVal, int zVal)
 	this->yVal = yVal;
 	this->zVal = zVal;
 }
+
 SleepEntry::~SleepEntry(void)
 {
 	return;
@@ -25,4 +27,24 @@ void SleepEntry::Print(void)
 	std::cout << "  X:" << this->xVal;
 	std::cout << "  Y:" << this->yVal;
 	std::cout << "  Z:" << this->zVal << std::endl;
+}
+
+int SleepEntry::getX()
+{
+	return this->xVal;
+}
+
+int SleepEntry::getY()
+{
+	return this->yVal;
+}
+
+int SleepEntry::getZ()
+{
+	return this->zVal;
+}
+
+int SleepEntry::getID()
+{
+	return this->id;
 }

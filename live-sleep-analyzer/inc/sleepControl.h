@@ -25,6 +25,9 @@ public:
 	// Analysis
 	int GetXAverage();
 	int GetBiggestXSpike();
+	double GetXSlopeBetween(int, int);
+	double GetYSlopeBetween(int, int);
+	double GetZSlopeBetween(int, int);
 
 	// Debug
 	void Print();
@@ -32,8 +35,6 @@ public:
 
 protected:
 	std::vector<SleepEntry> sleepEntries;
-	int entryCount;
-
 };
 
 

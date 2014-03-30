@@ -16,7 +16,12 @@ public:
 	~SleepEntry();
 	void Print();
 
-// protected:
+	int getX();
+	int getY();
+	int getZ();
+	int getID();
+
+protected:
 	unsigned int id;
 	int xVal;
 	int yVal;

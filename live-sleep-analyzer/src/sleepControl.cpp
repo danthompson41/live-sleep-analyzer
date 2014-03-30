@@ -4,16 +4,18 @@
  *  Created on: Mar 19, 2014
  *      Author: Dan
  */
-
+#include <stdlib.h>
 #include <iostream>
 #include <cmath>
 #include <sleepControl.h>
 #include <sleepEntry.h>
-
+#include <vector>
 
 SleepControl::SleepControl(void)
 {
-	this->entryCount = 0;
+	// to make things simple, we automatically add 1 sleep entry of all zeros at the beginning.
+	SleepEntry test(0,0,0,0);
+	this->sleepEntries.push_back(test);
 	return;
 }
 
@@ -24,27 +26,19 @@ SleepControl::~SleepControl(void)
 
 bool SleepControl::addSleepEntry(SleepEntry slpEntry)
 {
+	// extend the vector if we need to
+	if (this->sleepEntries.capacity() < slpEntry.getID())
+	{
+		this->sleepEntries.reserve(slpEntry.getID());
+	}
 	this->sleepEntries.push_back(slpEntry);
-	this->entryCount++;
+
 	return true;
 }
 
 void SleepControl::Print (void)
 {
-	std::cout << "Count: " << this->entryCount << std::endl;
-}
-
-int SleepControl::GetXAverage(void)
-{
-	float average = 0;
-	for (int i = 0; i < this->entryCount; i++)
-	{
-		SleepEntry tmp = this->GetEntry(i);
-		float xVal = tmp.xVal;
-		average += xVal;
-	}
-	average = average / this->entryCount;
-	return average;
+	// used for debugging
 }
 
 SleepEntry SleepControl::GetEntry(int i)
@@ -52,22 +46,81 @@ SleepEntry SleepControl::GetEntry(int i)
 	return this->sleepEntries[i];
 }
 
+
+/* Differential Functions */
+double SleepControl::GetXSlopeBetween(int j, int k)
+{
+	// need to check that both exist. for now, just make sure they're within range
+	if (j < 0 || k >= this->sleepEntries.size()) return 0;
+
+	double retVal;
+
+	int x1 = this->sleepEntries[j].getX();
+	int x2 = this->sleepEntries[k].getX();
+
+	retVal = ((x1 - x2) / (j - k));
+	return retVal;
+}
+
+double SleepControl::GetYSlopeBetween(int j, int k)
+{
+	// need to check that both exist. for now, just make sure they're within range
+	if (j < 0 || k >= this->sleepEntries.size()) return 0;
+
+	double retVal;
+
+	int x1 = this->sleepEntries[j].getY();
+	int x2 = this->sleepEntries[k].getY();
+
+	retVal = ((x1 - x2) / (j - k));
+	return retVal;
+}
+
+double SleepControl::GetZSlopeBetween(int j, int k)
+{
+	// need to check that both exist. for now, just make sure they're within range
+	if (j < 0 || k >= this->sleepEntries.size()) return 0;
+
+	double retVal;
+
+	int x1 = this->sleepEntries[j].getZ();
+	int x2 = this->sleepEntries[k].getZ();
+
+	retVal = ((x1 - x2) / (j - k));
+	return retVal;
+}
+
+
+/* Sample Analysis Functions */
+int SleepControl::GetXAverage(void)
+{
+	float average = 0;
+	for (int i = 0; i < this->sleepEntries.size(); i++)
+	{
+		SleepEntry tmp = this->GetEntry(i);
+		float xVal = tmp.getX();
+		average += xVal;
+	}
+	average = average / this->sleepEntries.size();
+	return average;
+}
+
 int SleepControl::GetBiggestXSpike(void)
 {
 	int biggestDiff = 0;
 	int biggestDiffIndex = 0;
 
-	for (int i = 1; i < this->entryCount; i++)
+	for (int i = 1; i < this->sleepEntries.size(); i++)
 	{
 		SleepEntry tmp1 = this->GetEntry(i - 1);
 		SleepEntry tmp2 = this->GetEntry(i);
 
 		int diff = 0;
-		diff = std::abs(tmp1.xVal - tmp2.xVal);
+		diff = std::abs(tmp1.getX() - tmp2.getX());
 		if (diff > biggestDiff)
 		{
 			biggestDiff = diff;
-			biggestDiffIndex = tmp1.id;
+			biggestDiffIndex = tmp1.getID();
 		}
 	}
 
@@ -75,5 +128,4 @@ int SleepControl::GetBiggestXSpike(void)
 	std::cout << "It was observed at " << biggestDiffIndex << std::endl;
 
 	return biggestDiff;
-
 }

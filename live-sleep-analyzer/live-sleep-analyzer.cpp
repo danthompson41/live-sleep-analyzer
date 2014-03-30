@@ -15,15 +15,20 @@
 #include "sleepEntry.h"
 #include "sleepControl.h"
 
+#define OVERRIDE_SLP_ID 1
+#define INPUT_FILE "C:\\Users\\Dan\\git\\arduino-simulator\\sleep.txt"
+#define OUTPUT_FILE "C:\\Users\\Dan\\desktop\\\derivSleep.txt"
+using namespace std;
+
 int main (int argc, char* argv[])
 {
 	// welcome
-	std::cout << "\n\n*** Live Sleep Analyzer ***\n";
+	cout << "\n\n*** Live Sleep Analyzer ***\n";
 
 	// command line args initial check
 	 if (argc <= 1)
 	{
-		std::cout << "\n* FORMAT: arduino-simulator.exe [COMX]";
+		cout << "\n* FORMAT: arduino-simulator.exe [COMX]";
 		return 1;
 	}
 
@@ -31,68 +36,63 @@ int main (int argc, char* argv[])
 	int iComport;
 	if (sscanf (argv[1], "%i", &iComport) != 1)
 	{
-		std::cout << "ERROR: Comport must be an integer";
+		cout << "ERROR: Comport must be an integer";
 	}
 
-	std::cout << "  COMPort: COM" << iComport << std::endl;
+	cout << "  COMPort: COM" << iComport << endl;
 
 	// Set up Master Sleep Control
 	SleepControl * sCTRL = new SleepControl();
 
-	// Open up the file
-	std::ifstream inputFile;
-	inputFile.open("C:\\Users\\Dan\\git\\arduino-simulator\\sleepdata.txt");
+	// Open output / inputs
+	ifstream inputFile(INPUT_FILE);
+	ofstream ouutputFile("newsleepdata.txt");
+	ofstream oDerivFile(OUTPUT_FILE);
+
+	// Check input / output errors
 	if (!inputFile.is_open()) {
-		std::cout << "Error, couldn't open file!";
+		cout << "Error, couldn't open input file!";
 		return 0;
 	}
 
-
-	// Read Each Line
-	std::string line;
-	while (std::getline(inputFile, line))
+	// Read in each line into 'line'
+	string line;
+	float i = 0;
+	while (getline(inputFile, line))
 	{
 		int iId, iX, iY, iZ;
 		const char * cpLine = line.c_str();
-		if (std::sscanf(cpLine, "%i,%i,%i,%i", &iId, &iX, &iY, &iZ) != EOF)
+
+		// attempt to scan line for correct string format
+		if (sscanf(cpLine, "%i,%i,%i,%i", &iId, &iX, &iY, &iZ) != EOF)
 		{
+			// Optional ID override if the input file has signed integer ID corruption (set outside main)
+			#if OVERRIDE_SLP_ID
+			  iId = i;
+			#endif
+
+			// Create then add new sleep entry
 			SleepEntry * sE = new SleepEntry(iId, iX, iY, iZ);
 			sCTRL->addSleepEntry(*sE);
+			ouutputFile << iId << "," << iX << "," << iY << "," << iZ << "\n";
+			oDerivFile << iId << "," << sCTRL->GetXSlopeBetween(iId, iId-1) << "," << sCTRL->GetYSlopeBetween(iId, iId-1) << "," << sCTRL->GetZSlopeBetween(iId, iId-1) << "\n";
+			//  free(&sE);
+			i++;
 		}
 		else {
-			std::cout << "Ignored the garbage: " << cpLine << std::endl;
+			// Otherwise, ignore line
+			cout << "Ignored the garbage: " << cpLine << endl;
 		}
-		free(&cpLine); // is this necessary?
 	}
 
+	ouutputFile.close();
+	oDerivFile.close();
+	cout << "Closed, done.";
 
 	// Analysis
-	std::cout << "Average: " << sCTRL->GetXAverage() << std::endl;
-
-	sCTRL->GetBiggestXSpike();
-
-
-
-
-	/*
-	CSerial serial;
-	if (!serial.Open(iComport,9600))
-	{
-		std::cout << "ERROR: Could not open serial";
-		return 0;
-	}
-
-	char * line;
-
-	while (serial.ReadLine(line))
-	{
-		std::cout<<line;
-	}
-
-	*/
+	// cout << "Average: " << sCTRL->GetXAverage() << endl;
+	// sCTRL->GetBiggestXSpike(); // couts included in function for now
 
 	return 1;
-
-
 }
 
