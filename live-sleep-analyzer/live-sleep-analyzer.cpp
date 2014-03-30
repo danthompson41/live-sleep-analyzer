@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <serial.h>
 #include <string.h>
+#include <direct.h>
 #include "sleepEntry.h"
 #include "sleepControl.h"
 
@@ -49,8 +50,12 @@ int main (int argc, char* argv[])
 	// Set up Master Sleep Control
 	SleepControl * sCTRL = new SleepControl();
 
+
+
 	// Open output / inputs
 	ifstream inFile(INPUT_FILE);
+
+	mkdir("../outdata");
 	ofstream outFile(PROCESSED_OUTPUT_FILE);
 	ofstream oDerivFile(DERIV_OUTPUT_FILE);
 
