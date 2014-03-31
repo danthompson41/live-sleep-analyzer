@@ -20,12 +20,12 @@
 #define OVERRIDE_SLP_ID 1
 
 // PROCSESED is used to output the above file. This fixes the negative signed integer ID issue
-#define INPUT_FILE "..\\samples\\newsleepdata.txt"
+
 
 
 
 using namespace std;
-
+const string INPUT_FILE = "..\\samples\\newsleepdata.txt";
 const string PROCESSED_OUTPUT_FILE = "..\\outdata\\processedSleepData.txt";
 const string DERIV_OUTPUT_FILE = "..\\outdata\\derivSleep.txt";
 
@@ -55,7 +55,7 @@ int main (int argc, char* argv[])
 
 
 	// Open output / inputs
-	ifstream inFile(INPUT_FILE);
+	ifstream inFile(INPUT_FILE.c_str());
 
 	mkdir("../outdata");
 
