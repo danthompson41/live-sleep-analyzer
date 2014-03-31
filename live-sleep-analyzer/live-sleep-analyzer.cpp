@@ -21,10 +21,12 @@
 
 // PROCSESED is used to output the above file. This fixes the negative signed integer ID issue
 #define INPUT_FILE "..\\samples\\newsleepdata.txt"
-#define PROCESSED_OUTPUT_FILE "..\\outdata\\processedSleepData.txt"
+
 #define DERIV_OUTPUT_FILE "..\\outdata\\derivSleep.txt"
 
 using namespace std;
+
+string PROCESSED_OUTPUT_FILE = "..\\outdata\\processedSleepData.txt";
 
 int main (int argc, char* argv[])
 {
@@ -51,12 +53,11 @@ int main (int argc, char* argv[])
 	SleepControl * sCTRL = new SleepControl();
 
 
-
 	// Open output / inputs
 	ifstream inFile(INPUT_FILE);
 
 	mkdir("../outdata");
-	ofstream outFile(PROCESSED_OUTPUT_FILE);
+
 	ofstream oDerivFile(DERIV_OUTPUT_FILE);
 
 	// Check input / output errors
@@ -84,7 +85,6 @@ int main (int argc, char* argv[])
 			// Create then add new sleep entry
 			SleepEntry * sE = new SleepEntry(iId, iX, iY, iZ);
 			sCTRL->addSleepEntry(*sE);
-			outFile << iId << "," << iX << "," << iY << "," << iZ << "\n";
 			oDerivFile << iId << "," << sCTRL->GetXSlopeBetween(iId, iId-1) << "," << sCTRL->GetYSlopeBetween(iId, iId-1) << "," << sCTRL->GetZSlopeBetween(iId, iId-1) << "\n";
 			//  free(&sE);
 			i++;
@@ -95,9 +95,12 @@ int main (int argc, char* argv[])
 		}
 	}
 
-	outFile.close();
+
 	oDerivFile.close();
-	cout << "Closed, done.";
+	cout << "Closed, done." << endl;
+
+	cout << "Saving...";
+	sCTRL->save(PROCESSED_OUTPUT_FILE);
 
 	// Analysis
 	// cout << "Average: " << sCTRL->GetXAverage() << endl;

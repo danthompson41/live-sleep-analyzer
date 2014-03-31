@@ -19,7 +19,7 @@ public:
 	int getX();
 	int getY();
 	int getZ();
-	int getID();
+	unsigned int getID();
 
 protected:
 	unsigned int id;

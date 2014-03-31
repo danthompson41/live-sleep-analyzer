@@ -6,10 +6,14 @@
  */
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <sleepControl.h>
 #include <sleepEntry.h>
 #include <vector>
+#include <string>
+
+using namespace std;
 
 SleepControl::SleepControl(void)
 {
@@ -128,4 +132,22 @@ int SleepControl::GetBiggestXSpike(void)
 	std::cout << "It was observed at " << biggestDiffIndex << std::endl;
 
 	return biggestDiff;
+}
+
+void SleepControl::save(string filename)
+{
+
+	ofstream outFile(filename.c_str());
+
+	for (unsigned int i = 0; i < this->sleepEntries.size(); i++)
+	{
+		SleepEntry sleepEntry = this->GetEntry(i);
+		int iId = sleepEntry.getID();
+		int iX = sleepEntry.getX();
+		int iY = sleepEntry.getY();
+		int iZ = sleepEntry.getZ();
+		outFile << iId << "," << iX << "," << iY << "," << iZ << "\n";
+	}
+
+	outFile.close();
 }

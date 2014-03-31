@@ -12,6 +12,7 @@
 #include <sleepEntry.h>
 #include <sleepControl.h>
 #include <vector>
+#include <string>
 
 class SleepControl {
 
@@ -21,6 +22,7 @@ public:
 
 	bool addSleepEntry(SleepEntry slpEntry);
 	SleepEntry GetEntry(int);
+	void save(std::string);
 
 	// Analysis
 	int GetXAverage();
@@ -31,7 +33,6 @@ public:
 
 	// Debug
 	void Print();
-
 
 protected:
 	std::vector<SleepEntry> sleepEntries;

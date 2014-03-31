@@ -44,7 +44,7 @@ int SleepEntry::getZ()
 	return this->zVal;
 }
 
-int SleepEntry::getID()
+unsigned int SleepEntry::getID()
 {
 	return this->id;
 }
