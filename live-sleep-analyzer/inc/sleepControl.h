@@ -23,6 +23,7 @@ public:
 	bool addSleepEntry(SleepEntry slpEntry);
 	SleepEntry GetEntry(int);
 	void save(std::string);
+	void saveDeriv(std::string);
 
 	// Analysis
 	int GetXAverage();

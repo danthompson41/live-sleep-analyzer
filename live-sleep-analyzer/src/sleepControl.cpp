@@ -151,3 +151,19 @@ void SleepControl::save(string filename)
 
 	outFile.close();
 }
+
+void SleepControl::saveDeriv(string filename)
+{
+
+	ofstream outFile(filename.c_str());
+
+	for (unsigned int i = 1; i < this->sleepEntries.size(); i++)
+	{
+		SleepEntry sleepEntry = this->GetEntry(i);
+		int iId = sleepEntry.getID();
+		outFile << iId << "," << this->GetXSlopeBetween(iId, iId-1) << "," << this->GetYSlopeBetween(iId, iId-1) << "," << this->GetZSlopeBetween(iId, iId-1) << "\n";
+	}
+
+	outFile.close();
+}
+
