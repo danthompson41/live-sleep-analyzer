@@ -35,20 +35,20 @@ int main (int argc, char* argv[])
 	cout << "\n\n*** Live Sleep Analyzer ***\n";
 
 	// command line args initial check
-	 if (argc <= 1)
-	{
-		cout << "\n* FORMAT: arduino-simulator.exe [COMX]";
-		return 1;
-	}
-
-	// Get Comport Number
-	int iComport;
-	if (sscanf (argv[1], "%i", &iComport) != 1)
-	{
-		cout << "ERROR: Comport must be an integer";
-	}
-
-	cout << "  COMPort: COM" << iComport << endl;
+//	 if (argc <= 1)
+//	{
+//		cout << "\n* FORMAT: arduino-simulator.exe [COMX]";
+//		return 1;
+//	}
+//
+//	// Get Comport Number
+//	int iComport;
+//	if (sscanf (argv[1], "%i", &iComport) != 1)
+//	{
+//		cout << "ERROR: Comport must be an integer";
+//	}
+//
+//	cout << "  COMPort: COM" << iComport << endl;
 
 	// Set up Master Sleep Control
 	SleepControl * sCTRL = new SleepControl();
@@ -98,11 +98,12 @@ int main (int argc, char* argv[])
 	cout << "Saving...";
 	sCTRL->save(PROCESSED_OUTPUT_FILE);
 	// sCTRL->saveDeriv(DERIV_OUTPUT_FILE);
-	sCTRL->analyze();
+	cout << "Saved!" << endl;
 
-	// Analysis
-	// cout << "Average: " << sCTRL->GetXAverage() << endl;
-	// sCTRL->GetBiggestXSpike(); // couts included in function for now
+
+	cout << "Analyzing..." << endl;
+	sCTRL->analyze();
+	cout << endl << "Done with analysis";
 
 	return 1;
 }
