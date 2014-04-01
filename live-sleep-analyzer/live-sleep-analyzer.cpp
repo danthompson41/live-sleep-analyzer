@@ -98,7 +98,7 @@ int main (int argc, char* argv[])
 	cout << "Saving...";
 	sCTRL->save(PROCESSED_OUTPUT_FILE);
 	// sCTRL->saveDeriv(DERIV_OUTPUT_FILE);
-
+	sCTRL->analyze();
 
 	// Analysis
 	// cout << "Average: " << sCTRL->GetXAverage() << endl;

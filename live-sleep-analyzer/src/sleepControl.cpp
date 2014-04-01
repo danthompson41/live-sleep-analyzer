@@ -8,10 +8,12 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#include <sleepControl.h>
-#include <sleepEntry.h>
 #include <vector>
 #include <string>
+#include <sleepControl.h>
+#include <sleepEntry.h>
+#include <sleepCycle.h>
+
 
 using namespace std;
 
@@ -165,5 +167,16 @@ void SleepControl::saveDeriv(string filename)
 	}
 
 	outFile.close();
+}
+
+void SleepControl::analyze()
+{
+
+	for (int i = 0; i < this->sleepEntries.size(); i++)
+	{
+		// perform after the fact analysis
+	}
+
+	return;
 }
 

@@ -10,7 +10,9 @@
 
 
 #include <sleepEntry.h>
+#include <sleepCycle.h>
 #include <sleepControl.h>
+
 #include <vector>
 #include <string>
 
@@ -26,6 +28,7 @@ public:
 	void saveDeriv(std::string);
 
 	// Analysis
+	void analyze();
 	int GetXAverage();
 	int GetBiggestXSpike();
 	double GetXSlopeBetween(int, int);
@@ -37,6 +40,8 @@ public:
 
 protected:
 	std::vector<SleepEntry> sleepEntries;
+	std::vector<SleepCycle> sleepCycles;
+
 };
 
 
