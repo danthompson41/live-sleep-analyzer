@@ -19,6 +19,7 @@ public:
 	int getX();
 	int getY();
 	int getZ();
+	int getMovement();
 	unsigned int getID();
 
 protected:

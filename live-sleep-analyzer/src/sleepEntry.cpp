@@ -5,7 +5,10 @@
  *      Author: Dan
  */
 #include <iostream>
+#include <cmath>
 #include <sleepEntry.h>
+
+using namespace std;
 
 SleepEntry::SleepEntry(int id, int xVal, int yVal, int zVal)
 {
@@ -47,4 +50,12 @@ int SleepEntry::getZ()
 unsigned int SleepEntry::getID()
 {
 	return this->id;
+}
+
+int SleepEntry::getMovement()
+{
+	int retVal;
+	retVal = abs(this->getX()) + abs(this->getY()) + abs(this->getZ());
+	return retVal;
+
 }
