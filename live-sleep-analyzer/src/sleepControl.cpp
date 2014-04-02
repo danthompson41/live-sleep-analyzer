@@ -196,42 +196,58 @@ void SleepControl::analyze()
 void SleepControl::analyze2()
 {
 	ofstream outFile("..\\outdata\\sums.txt");
+
+	// create vector to hold the last 15 movement measurements
 	std::vector<int> lastEntries;
 
+	// iterate over every entry
 	for (int i = 0; i < this->sleepEntries.size(); i++)
 	{
 		// perform after the fact analysis
 		SleepEntry sEntry = this->GetEntry(i);
 
+		// pop off the last entry if we're full (which we will be, for every entry after 15)
 		if (lastEntries.size() >= 15)
 		{
 			lastEntries.pop_back();
 		}
+
+		// insert the next movement value into the vector
 		lastEntries.insert(lastEntries.begin(), sEntry.getMovement());
 
+		// sum the vector entires
 		double sum = 0;
 		sum = accumulate(lastEntries.begin(), lastEntries.end(), 0);
 
 		outFile << sum << endl;
+
+		// check current stage, if we're in a sleepcycle or between sleep cycles
+		// for now this is a global variable. will probably be moved into sleepCtrl
 		if (inSleepCycle)
 		{
+			// if we're in the sleepcycle now, but have experienced a lot of movement in the last 15 readings
 			if (sum >= 3600)
 			{
+				// then we've exited the sleepcycle. we're between sleepcycles
 				cout << "SleepCycle Exited at " << i << "  Sum: " << sum << endl;
 				inSleepCycle = false;
-				// last15.clear();
 			}
+
+			// continue to prevent jump into next if statement
 			continue;
 		}
 		if (!inSleepCycle)
 		{
+			// if we're in between sleep cycles, but movement has died down (sum went back down below 2500)
 			if (sum <= 2500)
 			{
+				// we've entered a new sleepcycle
 				cout << "Entered New SleepCycle at " << i << " Sum :" << sum << endl;
 				inSleepCycle = true;
 			}
 		}
 	}
+
 	outFile.close();
 	return;
 }
