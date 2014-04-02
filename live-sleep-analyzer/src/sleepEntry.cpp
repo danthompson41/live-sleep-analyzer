@@ -13,9 +13,9 @@ using namespace std;
 SleepEntry::SleepEntry(int id, int xVal, int yVal, int zVal)
 {
 	this->id   = id;
-	this->xVal = xVal;
-	this->yVal = yVal;
-	this->zVal = zVal;
+	this->xVal = abs(xVal);
+	this->yVal = abs(yVal);
+	this->zVal = abs(zVal);
 }
 
 SleepEntry::~SleepEntry(void)

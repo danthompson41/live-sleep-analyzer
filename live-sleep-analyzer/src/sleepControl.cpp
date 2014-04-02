@@ -10,12 +10,15 @@
 #include <cmath>
 #include <vector>
 #include <string>
+#include <numeric>
 #include <sleepControl.h>
 #include <sleepEntry.h>
 #include <sleepCycle.h>
 
 
 using namespace std;
+
+bool inSleepCycle = true;
 
 SleepControl::SleepControl(void)
 {
@@ -171,12 +174,64 @@ void SleepControl::saveDeriv(string filename)
 
 void SleepControl::analyze()
 {
-
+	int timeoutCheck = 0;
+//	int
 	for (int i = 0; i < this->sleepEntries.size(); i++)
 	{
 		// perform after the fact analysis
+		SleepEntry sEntry = this->GetEntry(i);
+		if (sEntry.getMovement() > 500 || sEntry.getX() > 300 || sEntry.getY() > 300 || sEntry.getZ() > 300)
+		{
+
+//			cout << "Spike at " << i << " at " << this->GetEntry(i).getMovement() << endl;
+			printf("Spike at %i  -  Total: %i  -  XJump: %i  -  YJump: %i  -  ZJump: %i  \n", i, sEntry.getMovement(), sEntry.getX(), sEntry.getY(), sEntry.getZ() );
+
+			timeoutCheck = 0;
+		}
 	}
 
 	return;
 }
 
+void SleepControl::analyze2()
+{
+	ofstream outFile("..\\outdata\\sums.txt");
+	std::vector<int> lastEntries;
+
+	for (int i = 0; i < this->sleepEntries.size(); i++)
+	{
+		// perform after the fact analysis
+		SleepEntry sEntry = this->GetEntry(i);
+
+		if (lastEntries.size() >= 15)
+		{
+			lastEntries.pop_back();
+		}
+		lastEntries.insert(lastEntries.begin(), sEntry.getMovement());
+
+		double sum = 0;
+		sum = accumulate(lastEntries.begin(), lastEntries.end(), 0);
+
+		outFile << sum << endl;
+		if (inSleepCycle)
+		{
+			if (sum >= 3600)
+			{
+				cout << "SleepCycle Exited at " << i << "  Sum: " << sum << endl;
+				inSleepCycle = false;
+				// last15.clear();
+			}
+			continue;
+		}
+		if (!inSleepCycle)
+		{
+			if (sum <= 2500)
+			{
+				cout << "Entered New SleepCycle at " << i << " Sum :" << sum << endl;
+				inSleepCycle = true;
+			}
+		}
+	}
+	outFile.close();
+	return;
+}

@@ -25,7 +25,7 @@
 
 
 using namespace std;
-const string INPUT_FILE = "..\\samples\\newsleepdata.txt";
+const string INPUT_FILE = "..\\samples\\derivSleep.txt";
 const string PROCESSED_OUTPUT_FILE = "..\\outdata\\processedSleepData.txt";
 const string DERIV_OUTPUT_FILE = "..\\outdata\\derivSleep.txt";
 
@@ -104,6 +104,12 @@ int main (int argc, char* argv[])
 	cout << "Analyzing..." << endl;
 	sCTRL->analyze();
 	cout << endl << "Done with analysis";
+
+	cout << endl << endl << "Starting analysis 2..." << endl;
+	sCTRL->analyze2();
+	cout << "Done with analysis 2";
+
+
 
 	return 1;
 }

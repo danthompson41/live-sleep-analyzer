@@ -29,6 +29,7 @@ public:
 
 	// Analysis
 	void analyze();
+	void analyze2();
 	int GetXAverage();
 	int GetBiggestXSpike();
 	double GetXSlopeBetween(int, int);
